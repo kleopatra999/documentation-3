@@ -1527,3 +1527,13 @@ Use the following command to enable the user again::
  sudo -u www-data php occ user:enable <username>
 
 Note that once users are disabled, their connected browsers will be disconnected.
+
+Run Reports
+-----------
+
+The ability to run reports by using the occ command, is available for ownCloud 9.1 and higher.
+Specifically, administrators can create a configuration summary, with the click of a button, in the ownCloud Admin panel.
+Passwords and secrets are obscured, so admins may safely use the configuration report in support tickets and bug reports. 
+To make this functionality available, the configreport application must be
+enabled.
+
