@@ -1531,7 +1531,7 @@ Note that once users are disabled, their connected browsers will be disconnected
 Run Reports
 -----------
 
-The ability to run reports by using the occ command, is available for ownCloud 9.1 and higher.
+The ability to run reports by using the occ command, is available for ownCloud 9.0 and higher.
 Specifically, administrators can create a configuration summary, with the click of a button, in the ownCloud Admin panel.
 Passwords and secrets are obscured, so admins may safely use the configuration report in support tickets and bug reports. 
 To make this functionality available, the configreport application must be
