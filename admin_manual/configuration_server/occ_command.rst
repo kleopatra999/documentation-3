@@ -823,7 +823,7 @@ ldapAttributesForUserSearch
 ldapBackupHost
 ldapBackupPort
 ldapBase                         `dc=owncloudqa,dc=com`
-ldapBaseGroups                   `dc=owncloudqa,dc=com `
+ldapBaseGroups                   `dc=owncloudqa,dc=com`
 ldapBaseUsers                    `dc=owncloudqa,dc=com`
 ldapCacheTTL                     600 
 ldapConfigurationActive          1
@@ -1093,6 +1093,7 @@ The full list, of commands is::
   user:report                         shows how many users have access
   user:resetpassword                  Resets the password of the named user
   user:setting                        Read and modify user settings
+  user:sync                           Sync local users with an external backend service
 
 Creating Users
 ^^^^^^^^^^^^^^
@@ -1286,6 +1287,39 @@ authentication servers such as LDAP::
  |                  |    |
  | user directories | 2  |
  +------------------+----+
+ 
+Syncing User Accounts
+^^^^^^^^^^^^^^^^^^^^^
+
+This command syncs users stored in external backend services, such as _LDAP_, _Shibboleth_, and _Samba_, with ownCloud’s internal user database.
+But, it’s not essential to run it regularly, unless you have a large number of users who’s account properties have changed in a backend outside of ownCloud.
+When run, it will pick up changes from alternative user backends, such as LDAP where properties like ``cn`` or ``display name`` have changed.
+
+.. note:: 
+   It’s also `one of the commands`_ that you should run on a regular basis to ensure that your ownCloud installation is running optimally.
+
+Below are examples of how to use the command with an *LDAP*, *Samba*, and *Shibboleth* backend.
+
+LDAP
+~~~~
+
+::
+
+  sudo -u www-data ./occ user:sync "OCA\User_LDAP\User_Proxy"
+
+Samba
+~~~~~
+
+::
+
+  sudo -u www-data ./occ user:sync "OCA\User\SMB" -vvv
+
+Shibboleth
+~~~~~~~~~~
+
+::
+
+  sudo -u www-data ./occ user:sync "OCA\User_Shibboleth\UserBackend"
  
 .. _versions_label:
  
@@ -1537,3 +1571,6 @@ Passwords and secrets are obscured, so admins may safely use the configuration r
 To make this functionality available, the configreport application must be
 enabled.
 
+.. links
+   
+.. _one of the commands: :ref:`Available Background Jobs`

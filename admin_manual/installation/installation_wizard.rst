@@ -28,7 +28,6 @@ to use the :doc:`occ Command <../configuration_server/occ_command>`.
 
 * :ref:`Data Directory Location <data_directory_location_label>`
 * :ref:`Database Choice <database_choice_label>`
-* :ref:`Trusted Domains <trusted_domains_label>`
 * :ref:`Setting Strong Permissions <strong_perms_label>`
 
 .. _data_directory_location_label:
@@ -153,34 +152,6 @@ Click Finish Setup, and start using your new ownCloud server.
    :alt: ownCloud welcome screen after a successful installation
 
 Now we will look at some important post-installation steps.
-
-.. _trusted_domains_label: 
-
-Trusted Domains
----------------
-
-All URLs used to access your ownCloud server must be whitelisted in your 
-``config.php`` file, under the ``trusted_domains`` setting. Users 
-are allowed to log into ownCloud only when they point their browsers to a 
-URL that is listed in the ``trusted_domains`` setting. You may use IP addresses 
-and domain names. A typical configuration looks like this::
-
- 'trusted_domains' => 
-   array (
-    0 => 'localhost', 
-    1 => 'server1.example.com', 
-    2 => '192.168.1.50',
- ),
-
-The loopback address, ``127.0.0.1``, is automatically whitelisted, so as long 
-as you have access to the physical server you can always log in. In the event 
-that a load balancer is in place there will be no issues as long as it sends 
-the correct X-Forwarded-Host header. When a user tries a URL that 
-is not whitelisted the following error appears:
-
-.. figure:: images/install-wizard-a4.png
-   :scale: 75%
-   :alt: Error message when URL is not whitelisted
   
 .. _strong_perms_label:
  
@@ -209,30 +180,34 @@ use :ref:`label-phpinfo` (Look for the **User/Group** line).
    lost.
 
 The easy way to set the correct permissions is to copy and run this script. 
-Replace the ``ocpath`` variable with the path to your ownCloud directory, and 
-replace the ``htuser`` and ``htgroup`` variables with your HTTP user and group::
+Replace the ``ocpath`` variable with the path to your ownCloud directory.
+Replace the ``ocdata`` variable with the path to your ownCloud data directory.
+Replace the ``htuser`` and ``htgroup`` variables with your HTTP user and group::
 
  #!/bin/bash
  ocpath='/var/www/owncloud'
+ ocdata='/var/www/owncloud/data'
  htuser='www-data'
  htgroup='www-data'
  rootuser='root'
 
  printf "Creating possible missing Directories\n"
- mkdir -p $ocpath/data
+ mkdir -p $ocdata
  mkdir -p $ocpath/assets
  mkdir -p $ocpath/updater
 
  printf "chmod Files and Directories\n"
  find ${ocpath}/ -type f -print0 | xargs -0 chmod 0640
  find ${ocpath}/ -type d -print0 | xargs -0 chmod 0750
+ find ${ocdata}/ -type f -print0 | xargs -0 chmod 0640
+ find ${ocdata}/ -type d -print0 | xargs -0 chmod 0750
 
  printf "chown Directories\n"
  chown -R ${rootuser}:${htgroup} ${ocpath}/
  chown -R ${htuser}:${htgroup} ${ocpath}/apps/
  chown -R ${htuser}:${htgroup} ${ocpath}/assets/
  chown -R ${htuser}:${htgroup} ${ocpath}/config/
- chown -R ${htuser}:${htgroup} ${ocpath}/data/
+ chown -R ${htuser}:${htgroup} ${ocdata}/
  chown -R ${htuser}:${htgroup} ${ocpath}/themes/
  chown -R ${htuser}:${htgroup} ${ocpath}/updater/
 
@@ -244,10 +219,10 @@ replace the ``htuser`` and ``htgroup`` variables with your HTTP user and group::
    chmod 0644 ${ocpath}/.htaccess
    chown ${rootuser}:${htgroup} ${ocpath}/.htaccess
  fi
- if [ -f ${ocpath}/data/.htaccess ]
+ if [ -f ${ocdata}/.htaccess ]
   then
-   chmod 0644 ${ocpath}/data/.htaccess
-   chown ${rootuser}:${htgroup} ${ocpath}/data/.htaccess
+   chmod 0644 ${ocdata}/.htaccess
+   chown ${rootuser}:${htgroup} ${ocdata}/.htaccess
  fi
  
 If you have customized your ownCloud installation and your filepaths are 
